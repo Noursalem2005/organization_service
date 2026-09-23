@@ -1,0 +1,24 @@
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { CreateClinicUseCase } from '../../application/clinics/use-cases/create-clinic.use-case';
+import { GetClinicUseCase } from '../../application/clinics/use-cases/get-clinic.use-case';
+import { GetOrganizationClinicsUseCase } from '../../application/clinics/use-cases/get-organization-clinics.use-case';
+import { UpdateClinicUseCase } from '../../application/clinics/use-cases/update-clinic.use-case';
+import { DeleteClinicUseCase } from '../../application/clinics/use-cases/delete-clinic.use-case';
+import { CreateClinicInput } from '../../application/clinics/dto/create-clinic.input';
+import { UpdateClinicInput } from '../../application/clinics/dto/update-clinic.input';
+
+@Controller('clinics')
+export class ClinicsController {
+  constructor(
+    private readonly createClinicUseCase: CreateClinicUseCase,
+    private readonly getClinicUseCase: GetClinicUseCase,
+    private readonly getOrganizationClinicsUseCase: GetOrganizationClinicsUseCase,
+    private readonly updateClinicUseCase: UpdateClinicUseCase,
+    private readonly deleteClinicUseCase: DeleteClinicUseCase,
+  ) {}
+  @Post() async create(@Body() input: CreateClinicInput) { const e = await this.createClinicUseCase.execute(input); return { id: e.id.getValue(), organizationId: e.organizationId.getValue(), name: e.name, phone: e.phone, address: e.address, isActive: e.isActive, createdAt: e.createdAt, updatedAt: e.updatedAt }; }
+  @Get(':id') async getById(@Param('id') id: string) { const e = await this.getClinicUseCase.execute(id); return { id: e.id.getValue(), organizationId: e.organizationId.getValue(), name: e.name, phone: e.phone, address: e.address, isActive: e.isActive, createdAt: e.createdAt, updatedAt: e.updatedAt }; }
+  @Get('organization/:organizationId') async getByOrganization(@Param('organizationId') orgId: string) { const list = await this.getOrganizationClinicsUseCase.execute(orgId); return list.map(e => ({ id: e.id.getValue(), organizationId: e.organizationId.getValue(), name: e.name, phone: e.phone, address: e.address, isActive: e.isActive, createdAt: e.createdAt, updatedAt: e.updatedAt })); }
+  @Put(':id') async update(@Param('id') id: string, @Body() input: UpdateClinicInput) { const e = await this.updateClinicUseCase.execute(id, input); return { id: e.id.getValue(), organizationId: e.organizationId.getValue(), name: e.name, phone: e.phone, address: e.address, isActive: e.isActive, createdAt: e.createdAt, updatedAt: e.updatedAt }; }
+  @Delete(':id') async delete(@Param('id') id: string) { return { success: await this.deleteClinicUseCase.execute(id) }; }
+}
