@@ -4,8 +4,9 @@ import { HttpExceptionFilter } from './presentation/filters/http-exception.filte
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('organization');
   app.useGlobalFilters(new HttpExceptionFilter());
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 3004;
   await app.listen(port);
   console.log(`Organization Service is running on port ${port}`);
 }
