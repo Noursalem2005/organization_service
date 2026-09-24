@@ -5,6 +5,10 @@ import databaseConfig from './infrastructure/config/database.config';
 import appConfig from './infrastructure/config/app.config';
 import { MongodbModule } from './infrastructure/database/mongodb/mongodb.module';
 
+import { AUTH_SERVICE_PORT } from './application/ports/auth-service.port';
+import { AuthServiceClient } from './infrastructure/external-services/auth-service.client';
+import { DASHBOARD_SERVICE_PORT, DashboardServiceClient } from './infrastructure/external-services/dashboard-service.client';
+
 // Repositories
 import { ORGANIZATION_REPOSITORY } from './domain/repositories/organization.repository';
 import { MongoOrganizationRepository } from './infrastructure/repositories/mongodb-organization.repository';
@@ -84,6 +88,10 @@ import { ClinicSecretariesController } from './presentation/controllers/clinic-s
     ClinicSecretariesController,
   ],
   providers: [
+    // External gRPC Client Bindings
+    { provide: AUTH_SERVICE_PORT, useClass: AuthServiceClient },
+    { provide: DASHBOARD_SERVICE_PORT, useClass: DashboardServiceClient },
+
     // Repository Bindings
     { provide: ORGANIZATION_REPOSITORY, useClass: MongoOrganizationRepository },
     { provide: CLINIC_REPOSITORY, useClass: MongoClinicRepository },
