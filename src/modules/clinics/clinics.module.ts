@@ -9,12 +9,14 @@ import { GetOrganizationClinicsUseCase } from './application/use-cases/get-organ
 import { UpdateClinicUseCase } from './application/use-cases/update-clinic.use-case';
 import { DeleteClinicUseCase } from './application/use-cases/delete-clinic.use-case';
 import { ClinicsController } from './presentation/clinics.controller';
+import { OrganizationsModule } from '../organizations/organizations.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: ClinicSchemaClass.name, schema: ClinicSchema },
     ]),
+    OrganizationsModule,
   ],
   controllers: [ClinicsController],
   providers: [
